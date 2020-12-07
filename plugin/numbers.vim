@@ -199,25 +199,6 @@ function! s:VselectNumber() abort
     call cursor(lnum, end)
 endfunction
 
-" TODO (2020-02-12, 11:46:16): We should probably use decimal here
-function! s:RoundNumber(count, scientific) abort
-    let [start, end, number] = NumberBounds()
-
-    if start == 0
-        return
-    endif
-
-    let sign = (number[0] == '+') ? number[0] : ''
-    let format = a:scientific == 1 ? 'e' : 'f'
-    let rounded = printf('%.' . a:count . format, str2float(number))
-    let pattern = start != 1 ? '\%>' . (start - 1) . 'c' . s:number_pattern : s:number_pattern
-    let result = sign . substitute(getline('.'), pattern , rounded, '')
-
-    let lnum = line('.')
-    call setline(lnum, result)
-    call cursor(lnum, start)
-endfunction
-
 " <Plug> mappings
 vnoremap <silent> <Plug>(VselectNumber)         :<c-u>call <SID>VselectNumber()<cr>
 onoremap <silent> <Plug>(VselectNumber)         :<c-u>call <SID>VselectNumber()<cr>
@@ -227,8 +208,6 @@ vnoremap <silent> <Plug>(VselectHexNumber)      :<c-u>call <SID>VselectHexNumber
 onoremap <silent> <Plug>(VselectHexNumber)      :<c-u>call <SID>VselectHexNumber()<cr>
 vnoremap <silent> <Plug>(VselectOctalNumber)    :<c-u>call <SID>VselectOctalNumber()<cr>
 onoremap <silent> <Plug>(VselectOctalNumber)    :<c-u>call <SID>VselectOctalNumber()<cr>
-nnoremap <silent> <Plug>(RoundNumber)           :<c-u>call <SID>RoundNumber(v:count, 0)<cr>
-nnoremap <silent> <Plug>(RoundNumberScientific) :<c-u>call <SID>RoundNumber(v:count, 1)<cr>
 
 if g:numbers#enable_text_objects
     vmap <silent> af <Plug>(VselectNumber)
@@ -247,11 +226,6 @@ if g:numbers#enable_text_objects
     omap <silent> ao <Plug>(VselectOctalNumber)
     vmap <silent> io <Plug>(VselectOctalNumber)
     omap <silent> io <Plug>(VselectOctalNumber)
-endif
-
-if get(g:, 'floating_point#enable_mappings', 1)
-    nmap <silent> crr <Plug>(RoundNumber)
-    nmap <silent> cre <Plug>(RoundNumberScientific)
 endif
 
 let g:numbers_loaded = 1
