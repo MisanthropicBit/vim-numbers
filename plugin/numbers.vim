@@ -40,12 +40,12 @@ let g:numbers#include_leading_zeroes = get(g:, 'numbers#include_leading_zeroes',
 let g:numbers#enable_text_objects = get(g:, 'numbers#enable_text_objects', 1)
 
 " Find the start column of a pattern in a line
-function! FindPatternStartColumn(pattern, lnum) abort
+function! s:FindPatternStartColumn(pattern, lnum) abort
     return searchpos(a:pattern, 'bcn', a:lnum)[1]
 endfunction
 
 " Find the end column of a pattern in a line
-function! FindPatternEndColumn(pattern, lnum) abort
+function! s:FindPatternEndColumn(pattern, lnum) abort
     let end_col = searchpos(a:pattern, 'cn', a:lnum)[1]
 
     if end_col == 0
@@ -66,14 +66,14 @@ function! s:VselectPattern(start_pattern, end_pattern, valid_pattern, valid_toke
         return 0
     endif
 
-    let start = FindPatternStartColumn(a:start_pattern, lnum)
+    let start = s:FindPatternStartColumn(a:start_pattern, lnum)
 
     if start == 0
         return
     endif
 
     let start += a:start_offset
-    let end = FindPatternEndColumn(a:end_pattern, lnum)
+    let end = s:FindPatternEndColumn(a:end_pattern, lnum)
     let subline = line[start-1:end-1]
 
     if match(subline, a:valid_pattern) == -1
@@ -124,7 +124,7 @@ function! s:VselectOctalNumber() abort
 endfunction
 
 " Find the start of a number
-function! FindNumberStart(line, lnum) abort
+function! s:FindNumberStart(line, lnum) abort
     let start_col = searchpos(s:not_valid_number_tokens_pattern, 'bcn', a:lnum)[1]
 
     if start_col == 0
@@ -144,7 +144,7 @@ function! FindNumberStart(line, lnum) abort
 endfunction
 
 " Find the end of a number
-function! FindNumberEnd(lnum) abort
+function! s:FindNumberEnd(lnum) abort
     let end_col = searchpos(s:not_valid_number_tokens_pattern, 'cn', a:lnum)[1]
 
     if end_col == 0
@@ -157,7 +157,7 @@ function! FindNumberEnd(lnum) abort
 endfunction
 
 " Get the bounds for a number under the cursor
-function! NumberBounds() abort
+function! s:NumberBounds() abort
     let [lnum, col] = getpos('.')[1:2]
     let line = getline(lnum)
     let bad_bounds = [0, 0]
@@ -166,13 +166,13 @@ function! NumberBounds() abort
         return bad_bounds
     endif
 
-    let start_col = FindNumberStart(line, lnum)
+    let start_col = s:FindNumberStart(line, lnum)
 
     if start_col == 0
         return bad_bounds
     endif
 
-    let end_col = FindNumberEnd(lnum)
+    let end_col = s:FindNumberEnd(lnum)
     let subline = line[start_col-1:end_col-1]
 
     if match(subline, s:number_pattern) == -1
@@ -187,7 +187,7 @@ endfunction
 
 " Visually select a number
 function! s:VselectNumber() abort
-    let [start, end] = NumberBounds()
+    let [start, end] = s:NumberBounds()
 
     if start == 0
         return
