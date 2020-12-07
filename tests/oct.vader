@@ -1,0 +1,47 @@
+Include: setup.vader
+
+Before:
+  let g:numbers_test_textobj = 'o'
+
+After:
+  unlet g:numbers_test_textobj
+
+Given (valid octal numbers):
+     02322
+    0o2322   
+      041407357  
+
+Execute (only the octal numbers were selected):
+  let expected = [
+    \[4, 8],
+    \[3, 8],
+    \[5, 13],
+  \]
+
+  call DoAllSelections(g:numbers_test_textobj, expected)
+
+Given (valid octal numbers in sentences):
+  This is a octal number 02322 in a sentence
+  This is a octal number 0o2322 in a sentence
+  !0o2322\\
+
+Execute (only the octal numbers were selected):
+  let expected = [
+    \[24, 28],
+    \[24, 29],
+    \[2, 7],
+  \]
+
+  call DoAllSelections(g:numbers_test_textobj, expected)
+
+Given (invalid octal numbers):
+     O2322
+    0o2_22   
+
+Execute (nothing is selected expect the valid prefix in the last line):
+  let expected = [
+    \[0, 0],
+    \[3, 5],
+  \]
+
+  call DoAllSelections(g:numbers_test_textobj, expected)

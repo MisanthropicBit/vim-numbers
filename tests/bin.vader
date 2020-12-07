@@ -1,0 +1,45 @@
+Include: setup.vader
+
+Before:
+  let g:numbers_test_textobj = 'n'
+
+After:
+  unlet g:numbers_test_textobj
+
+Given (valid binary numbers):
+     0b011101  
+    0B11011   
+
+Execute (only the binary numbers were selected):
+  let expected = [
+    \[4, 11],
+    \[3, 9],
+  \]
+
+  call DoAllSelections(g:numbers_test_textobj, expected)
+
+Given (valid binary numbers in sentences):
+  This is a binary number 0b011101 in a sentence
+  This is a binary number 0B11011 in a sentence
+  !0b011101\\
+
+Execute (only the binary numbers were selected):
+  let expected = [
+    \[25, 32],
+    \[25, 31],
+    \[2, 9],
+  \]
+
+  call DoAllSelections(g:numbers_test_textobj, expected)
+
+Given (invalid binary numbers):
+     0h011101  
+    0B11_11   
+
+Execute (nothing is selected expect the valid prefix in the last line):
+  let expected = [
+    \[0, 0],
+    \[3, 6],
+  \]
+
+  call DoAllSelections(g:numbers_test_textobj, expected)

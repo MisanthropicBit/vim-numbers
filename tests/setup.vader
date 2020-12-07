@@ -1,0 +1,27 @@
+Execute:
+  " Perform all selections of a text object for all lines and column positions
+  " and compare the visual selection against a set of expected results given
+  " per line
+  function! DoAllSelections(type, expected) abort
+    let cmd_template = "normal %d|v%s%s\<esc>"
+
+    for lnum in range(1, line('$'))
+      let [low, high] = a:expected[lnum-1]
+      execute printf("normal! %dG", lnum)
+
+      for textobj in ['a', 'i']
+        for col in range(1, col('$')-1)
+          execute printf(cmd_template, col, textobj, a:type)
+
+          if col >= low && col <= high
+            let result = [[lnum, low], [lnum, high]]
+          else
+            let result = [[lnum, col], [lnum, col]]
+          endif
+
+          AssertEqual getpos("'<")[1:2], result[0]
+          AssertEqual getpos("'>")[1:2], result[1]
+        endfor
+      endfor
+    endfor
+  endfunction

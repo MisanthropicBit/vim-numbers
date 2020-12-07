@@ -1,0 +1,133 @@
+*vim-numbers.txt* Text objects for numbers
+
+               █ █ █ █▀▄▀█ ▄▄ █▄ █ █ █ █▀▄▀█ █▄▄ █▀▀ █▀█ █▀
+               ▀▄▀ █ █ ▀ █    █ ▀█ █▄█ █ ▀ █ █▄█ ██▄ █▀▄ ▄█
+
+                               Version 0.1.0 ~
+
+==============================================================================
+INTRODUCTION                                              *vim-numbers-intro*
+
+vim-numbers is a small plugin that provides text objects for visually
+selecting numbers in decimal, binary, hexadecimal and octal formats.
+
+number format   valid prefixes      features~
+decimal         -                   integral or floating-point, optional
+                                    scientific notation and signs
+binary          0b, 0B              -
+hexadecimal     0x, 0X, #           -
+octal           0, 0o               -
+
+==============================================================================
+USAGE                                                     *vim-numbers-usage*
+
+Navigate to the floating-point number in the following paragraph and type
+'vaf' or 'vif' to visually select it. Then navigate to the hexadecimal number
+on line 3 and select it with 'vax' or 'vix'. Do the same with the next
+hexadecimal number on line 4. Use 'van' or 'vin' to select the binary number
+and 'vao' or 'vio' to select the octal number.
+
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+    tempor incididunt ut labore et 123.45 magna aliqua. Ut enim ad minim
+    veniam, quis nostrud #865ec7 ullamco laboris nisi ut aliquip ex ea commodo
+    consequat. Duis 0x865EC7 irure dolor in reprehenderit in voluptate velit
+    esse cillum dolore eu fugiat nulla 0b10011. Excepteur sint occaecat
+    cupidatat non 0o41457307, sunt in culpa qui officia deserunt mollit anim
+    id est laborum.
+
+==============================================================================
+REQUIREMENTS                                       *vim-numbers-requirements*
+
+This plugin has no requirements.
+
+==============================================================================
+TEXT OBJECTS                                       *vim-numbers-text-objects*
+
+The plugin defines the following text objects. For more information on text
+objects in general, see |text-objects|.
+
+                                                        *vim-numbers-af* *v_af*
+af			"a number". Either an intergral or floating-point
+                        number.
+
+                                                        *vim-numbers-if* *v_if*
+if			"inner number". Has the same effect as the 'af' text
+                        object (see |vim-numbers-af|).
+
+                                                        *vim-numbers-an* *v_an*
+an			"a bi[n]ary number".
+
+                                                        *vim-numbers-in* *v_in*
+in			"inner bi[n]ary number". Has the same effect as the
+                        'an' text object (see |vim-numbers-an|).
+
+                                                        *vim-numbers-ax* *v_ax*
+ax			"a he[x]adecimal number".
+
+                                                        *vim-numbers-ix* *v_ix*
+ix			"inner he[x]adecimal number". Has the same effect as
+                        the 'ax' text object (see |vim-numbers-ax|).
+
+                                                        *vim-numbers-ao* *v_ao*
+ao			"an [o]ctal number".
+
+                                                        *vim-numbers-io* *v_io*
+io			"inner [o]ctal number". Has the same effect as the
+                        'ao' text object (see |vim-numbers-ao|).
+
+
+==============================================================================
+CONFIGURATION                                     *vim-numbers-configuration*
+
+The given values for the configuration variables below are the defaults.
+
+* Include two or more leading zeroes in visually selections. This means that
+  0.239 or -0.239 can always be selected but 00.239 is not selected if this
+  option is disabled. >
+    let g:numbers#include_leading_zeroes = 1
+<
+* Enable text objects. >
+    let g:numbers#enable_text_objects = 1
+<
+==============================================================================
+MAPPINGS                                               *vim-numbers-mappings*
+
+Plugin mappings are available if you want to rebind the default text object
+mappings.
+
+<Plug>(VselectNumber)                            *:vim-numbers-plug-mapping*
+    Visually select a decimal number.
+
+<Plug>(VselectBinaryNumber)                  *:vim-numbers-bin-plug-mapping*
+    Visually select a binary number.
+
+<Plug>(VselectHexNumber)                     *:vim-numbers-hex-plug-mapping*
+    Visually select a hexadecimal number.
+
+<Plug>(VselectOctalNumber)                   *:vim-numbers-oct-plug-mapping*
+    Visually select an octal number.
+
+==============================================================================
+FUNCTIONS                                              *vim-numbers-commands*
+
+                                                     *VimNumbersVersion()*
+VimNumbersVersion()            Returns the current version of the plugin.
+
+==============================================================================
+CONTRIBUTIONS                                     *vim-numbers-contributions*
+
+Contributions through pull requests are always welcome. Please see
+CONTRIBUTING.md for details on how to contribute.
+
+==============================================================================
+AUTHOR                                                   *vim-numbers-author*
+
+Alexander Asp Bock (https://github.com/MisanthropicBit/vim-numbers).
+
+==============================================================================
+LICENSE                                                 *vim-numbers-license*
+
+
+BSD 3-Clause License. Copyright © 2020 Alexander Asp Bock
+
+ vim:tw=78:ts=8:ft=help:norl:

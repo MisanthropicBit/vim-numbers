@@ -1,0 +1,51 @@
+Include: setup.vader
+
+Before:
+  let g:numbers_test_textobj = 'x'
+
+After:
+  unlet g:numbers_test_textobj
+
+Given (valid hexadecimal numbers):
+     0x8C966f  
+    #abc48B   
+       0XdaBf47   
+
+Execute (only the hexadecimal numbers were selected):
+  let expected = [
+    \[4, 11],
+    \[3, 9],
+    \[6, 13],
+  \]
+
+  call DoAllSelections(g:numbers_test_textobj, expected)
+
+Given (valid hexadecimal numbers in sentences):
+  This is a hexadecimal number 0x8c966F in a sentence
+  This is a hexadecimal number #aBC48b in a sentence
+  This is a hexadecimal number 0XdAbf47 in a sentence
+  !0XdAbf47\\
+
+Execute (only the hexadecimal numbers were selected):
+  let expected = [
+    \[30, 37],
+    \[30, 36],
+    \[30, 37],
+    \[2, 9],
+  \]
+
+  call DoAllSelections(g:numbers_test_textobj, expected)
+
+Given (invalid hexadecimal numbers):
+     0xhC966f  
+    #nbc48B   
+       0XdaBr47   
+
+Execute (nothing is selected expect the valid prefix in the last line):
+  let expected = [
+    \[0, 0],
+    \[0, 0],
+    \[6, 10],
+  \]
+
+  call DoAllSelections(g:numbers_test_textobj, expected)
