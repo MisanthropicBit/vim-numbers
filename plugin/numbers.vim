@@ -38,6 +38,7 @@ let s:octal_valid_pattern = '^0o\?[0-7]\+$'
 " Configuration variables
 let g:numbers#include_leading_zeroes = get(g:, 'numbers#include_leading_zeroes', 1)
 let g:numbers#enable_text_objects = get(g:, 'numbers#enable_text_objects', 1)
+let g:numbers#enable_mappings = get(g:, 'numbers#enable_mappings', 1)
 
 " Find the start column of a pattern in a line
 function! FindPatternStartColumn(pattern, lnum) abort
@@ -249,7 +250,7 @@ if g:numbers#enable_text_objects
     omap <silent> io <Plug>(VselectOctalNumber)
 endif
 
-if get(g:, 'floating_point#enable_mappings', 1)
+if g:numbers#enable_mappings
     nmap <silent> crr <Plug>(RoundNumber)
     nmap <silent> cre <Plug>(RoundNumberScientific)
 endif
