@@ -7,7 +7,7 @@
         <img src="https://travis-ci.org/MisanthropicBit/vim-numbers.svg?branch=master" />
     </a>
     <a href="/LICENSE">
-        <img src="https://img.shields.io/github/license/MisanthropicBit/vim-numbers.svg" />
+        <img src="https://img.shields.io/github/license/MisanthropicBit/vim-numbers" />
     </a>
     <img src="https://img.shields.io/badge/compatible-neovim-blueviolet" />
   </p>
