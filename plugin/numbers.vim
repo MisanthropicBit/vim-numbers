@@ -63,7 +63,7 @@ function! s:VselectPattern(start_pattern, end_pattern, valid_pattern, valid_toke
     let line = getline(lnum)
 
     if line[col-1] !~# a:valid_token_pattern
-        return 0
+        return
     endif
 
     let start = s:FindPatternStartColumn(a:start_pattern, lnum)
@@ -80,7 +80,6 @@ function! s:VselectPattern(start_pattern, end_pattern, valid_pattern, valid_toke
         return
     endif
 
-    let lnum = line('.')
     call cursor(lnum, start)
     normal! v
     call cursor(lnum, end)
