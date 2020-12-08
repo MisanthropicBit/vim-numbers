@@ -155,47 +155,37 @@ function! s:FindNumberEnd(lnum) abort
     return end_col
 endfunction
 
-" Get the bounds for a number under the cursor
-function! s:NumberBounds() abort
+" Return 1 if a string is a valid number, 0 otherwise
+function! s:IsValidNumber(string) abort
+    " Do not consider octal numbers decimal numbers
+    return match(a:string, s:number_pattern) != -1 && match(a:string, '^0\d\+$') == -1
+endfunction
+
+" Visually select a number
+function! s:VselectNumber() abort
     let [lnum, col] = getpos('.')[1:2]
     let line = getline(lnum)
-    let bad_bounds = [0, 0]
 
-    if line[col-1] =~# '[^0-9.\-+eE]'
-        return bad_bounds
+    if line[col-1] =~# s:not_valid_number_tokens_pattern
+        return
     endif
 
     let start_col = s:FindNumberStart(line, lnum)
 
     if start_col == 0
-        return bad_bounds
+        return
     endif
 
     let end_col = s:FindNumberEnd(lnum)
     let subline = line[start_col-1:end_col-1]
 
-    if match(subline, s:number_pattern) == -1
-        return bad_bounds
-    elseif match(subline, '^0\d\+$') != -1
-        " Do not consider octal numbers decimal numbers
-        return bad_bounds
-    endif
-
-    return [start_col, end_col]
-endfunction
-
-" Visually select a number
-function! s:VselectNumber() abort
-    let [start, end] = s:NumberBounds()
-
-    if start == 0
+    if !s:IsValidNumber(subline)
         return
     endif
 
-    let lnum = line('.')
-    call cursor(lnum, start)
+    call cursor(lnum, start_col)
     normal! v
-    call cursor(lnum, end)
+    call cursor(lnum, end_col)
 endfunction
 
 " <Plug> mappings
