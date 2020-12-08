@@ -134,7 +134,7 @@ function! s:FindNumberStart(line, lnum) abort
         let start_col += 1
     endif
 
-    " TODO: 0.239823 or -0.239823 is fine though, 000.23943 is not
+    " If leading zeroes are disabled, 0.239823 or -0.239823 is fine but 000.23943 is not
     if a:line[start_col-1:] =~# s:leading_zeroes_pattern && !g:numbers#include_leading_zeroes
         return 0
     endif
