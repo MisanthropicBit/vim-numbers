@@ -1,0 +1,31 @@
+language: vim
+
+env:
+    global:
+        - VADER_OUTPUT_FILE=/dev/stderr
+
+    jobs:
+        - TESTVIM=vim TESTVIM_OPTS=-N
+        - TESTVIM=nvim TESTVIM_OPTS=
+
+install: |
+    if [ "$TESTVIM" = "nvim" ]; then
+        # Fail immediately on first failing command, print each line
+        # as it is executed
+        set -ev
+
+        pushd /tmp
+
+        # Build the nightly 64-bit Linux version of Neovim for testing
+        # See https://github.com/neovim/bot-ci#generated-builds
+        eval "$(curl -Ss https://raw.githubusercontent.com/neovim/bot-ci/master/scripts/travis-setup.sh) nightly-x64"
+
+        popd
+    fi
+
+before_script:
+    - git clone https://github.com/junegunn/vader.vim.git
+    - $TESTVIM --version
+
+script:
+    - $TESTVIM $TESTVIM_OPTS -u ./tests/test_vimrc -c 'Vader! ./tests/*.vader' > /dev/null
