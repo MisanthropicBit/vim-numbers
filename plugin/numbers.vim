@@ -1,6 +1,6 @@
-"if &cp || exists('g:numbers_loaded')
-"    finish
-"endif
+if &cp || exists('g:numbers_loaded')
+    finish
+endif
 
 let s:cpo_save = &cpo
 
