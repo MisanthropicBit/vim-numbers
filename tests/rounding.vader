@@ -1,0 +1,50 @@
+Given (various floating-point numbers):
+  9.7369843
+  1.3298394
+  1.3298394
+
+Do (round them):
+  1G4l2crr
+  2G4l1crr
+  3G4lcrr
+
+Expect (rounded floating-point numbers):
+  9.74
+  1.3
+  1
+
+Given (floating-point with signs):
+  -2393.23982
+  +0.42684
+
+Do (round them):
+  1G03crr
+  2G01crr
+
+Expect (signs are preserved):
+  -2393.240
+  +0.4
+
+Before:
+  let g:floating_point#include_leading_zeroes = 1
+
+Given (floating-point numbers with leading zeroes):
+  09834.939345
+
+Do (round them):
+  3l5crr
+
+Expect (leading zeroes are ignored):
+  9834.93935
+
+Before:
+  let g:floating_point#include_leading_zeroes = 0
+
+Given (floating-point numbers with leading zeroes):
+  09834.939345
+
+Do (round them):
+  3l5crr
+
+Expect (leading zeroes are ignored):
+  09834.93935

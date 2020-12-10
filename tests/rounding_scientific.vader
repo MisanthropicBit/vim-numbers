@@ -1,0 +1,29 @@
+Before:
+  let g:floating_point#include_leading_zeroes = 0
+
+Given (scientific floating-point numbers):
+  15.25e-2
+  15.25E-2
+
+Do (round them normally):
+  1G4l2crr
+  2G4l3crr
+
+Expect (numbers have been rounded without scientific notation):
+  0.15
+  0.153
+
+"Given:
+"  1.2394832e44
+"  +1.2394832e-44
+"  -1.2394832e44
+
+"Do:
+"  1G2cre
+"  2G2cre
+"  3G2cre
+
+"Expect:
+"  1.24e+44
+"  +1.24e+44
+"  -1.24e+44
