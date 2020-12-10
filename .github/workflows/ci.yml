@@ -14,7 +14,8 @@ jobs:
       matrix:
         vim_type: ['vim']
         #, 'neovim']
-        os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
+        os: ['ubuntu-latest', 'windows-latest']
+        #, 'macos-latest']
         vim_version:
           #- 'v8.2.1000'
           #- 'v8.2.0000'
@@ -25,7 +26,7 @@ jobs:
     runs-on: '${{ matrix.os }}'
     steps:
       - uses: 'actions/checkout@v2'
-      - name: 'Setup neovim'
+      - name: 'Setup vim/neovim'
         id: 'vim'
         uses: 'thinca/action-setup-vim@v1'
         with:
