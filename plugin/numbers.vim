@@ -11,14 +11,24 @@ function! VimNumbersVersion() abort
     return s:vim_numbers_version
 endfunction
 
+" Create a thousand separator pattern from a set of parameters
+function! s:CreateThousandSeparatorPattern(base_pattern, name, tsep, dsep) abort
+    let pattern = printf(a:base_pattern, a:tsep, a:dsep)
+    execute printf("let s:number_thousand_separator_%s_pattern = '%s'", a:name, pattern)
+endfunction
+
 let s:binary_valid_tokens = 'bB0-1'
 let s:hex_valid_tokens = 'xX#0-9a-fA-F'
 let s:octal_valid_tokens = 'o0-7'
 
 " Useful patterns
 let s:leading_zeroes_pattern = '^[\-+]\?0\{2,}[0-9]\+'
-let s:not_valid_number_tokens_pattern = '[^0-9.\-+eE]'
+let s:not_valid_number_tokens_pattern = '[^0-9.,\-+eE]'
 let s:number_pattern = '^[\-+]\?[0-9]\+\(\.[0-9]\+\)\?\([eE][\-+]\?[0-9]\+\(\.[0-9]\+\)\?\)\?$'
+let s:number_thousand_separator_base_pattern = '^[\-+]\?[0-9]\(\(%s[0-9]\{3}\)\+\)\(%s[0-9]\+\)\?$'
+
+call s:CreateThousandSeparatorPattern(s:number_thousand_separator_base_pattern, 'dot', '\.', ',')
+call s:CreateThousandSeparatorPattern(s:number_thousand_separator_base_pattern, 'comma', ',', '\.')
 
 let s:binary_start_pattern = '0[bB]'
 let s:binary_valid_token = '[' . s:binary_valid_tokens . ']'
@@ -157,8 +167,16 @@ endfunction
 
 " Return 1 if a string is a valid number, 0 otherwise
 function! s:IsValidNumber(string) abort
-    " Do not consider octal numbers decimal numbers
-    return match(a:string, s:number_pattern) != -1 && match(a:string, '^0\d\+$') == -1
+    " Match the number pattern or either of the patterns with thousand
+    " separators
+    if match(a:string, s:number_pattern) != -1
+        \|| match(a:string, s:number_thousand_separator_dot_pattern) != -1
+        \|| match(a:string, s:number_thousand_separator_comma_pattern) != -1
+            " Do not consider valid octal numbers decimal numbers
+            return match(a:string, '^0\d\+$') == -1
+    endif
+
+    return 0
 endfunction
 
 " Visually select a number
