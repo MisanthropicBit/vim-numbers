@@ -3,8 +3,8 @@
   <p>Text objects for numbers</p>
   <p>
     <img src="https://img.shields.io/badge/version-0.1.0-success" />
-    <a href="https://travis-ci.org/MisanthropicBit/vim-numbers">
-        <img src="https://travis-ci.org/MisanthropicBit/vim-numbers.svg?branch=master" />
+    <a href="https://github.com/MisanthropicBit/vim-numbers/actions?query=workflow%3A%22Run+vader+tests%22">
+        <img src="https://img.shields.io/github/workflow/status/MisanthropicBit/vim-numbers/Run%20vader%20tests/master" />
     </a>
     <a href="/LICENSE">
         <img src="https://img.shields.io/github/license/MisanthropicBit/vim-numbers" />
