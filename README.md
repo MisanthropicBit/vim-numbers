@@ -13,8 +13,8 @@
   </p>
 </div>
 
-A is a small plugin that provides text objects for visually selecting numbers in
-decimal, binary, hexadecimal and octal formats.
+A small plugin that provides text objects for integral or floating-point numbers
+(with or without scientific notation) and binary, hexadecimal and octal numbers.
 
 ## Installation
 
