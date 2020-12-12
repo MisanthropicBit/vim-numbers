@@ -1,7 +1,7 @@
 Include: setup.vader
 
 Before:
-  let g:numbers_test_textobj = 'f'
+  let g:numbers_test_textobj = 'n'
 
 Given (floating-point examples from ':help floating-point-format'):
     123.456  
@@ -48,7 +48,7 @@ Execute (only the numbers were selected):
   call DoAllSelections(g:numbers_test_textobj, expected)
 
 Before:
-  let g:numbers_test_textobj = 'f'
+  let g:numbers_test_textobj = 'n'
   let g:numbers#include_leading_zeroes = 0
 
 After:

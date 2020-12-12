@@ -21,17 +21,17 @@ octal           0, 0o               -
 ==============================================================================
 USAGE                                                     *vim-numbers-usage*
 
-Navigate to the floating-point number in the following paragraph and type
-'vaf' or 'vif' to visually select it. Then navigate to the hexadecimal number
+Navigate to the two floating-point numbers in the following paragraph and type
+'van' or 'vin' to visually select them. Then navigate to the hexadecimal number
 on line 3 and select it with 'vax' or 'vix'. Do the same with the next
-hexadecimal number on line 4. Use 'van' or 'vin' to select the binary number
+hexadecimal number on line 4. Use 'vai' or 'vii' to select the binary number
 and 'vao' or 'vio' to select the octal number.
 
     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-    tempor incididunt ut labore et 123.45 magna aliqua. Ut enim ad minim
-    veniam, quis nostrud #865ec7 ullamco laboris nisi ut aliquip ex ea commodo
-    consequat. Duis 0x865EC7 irure dolor in reprehenderit in voluptate velit
-    esse cillum dolore eu fugiat nulla 0b10011. Excepteur sint occaecat
+    tempor incididunt ut labore et 123.45 magna -3.1416e+88 aliqua. Ut enim ad
+    minim veniam, quis nostrud #865ec7 ullamco laboris nisi ut aliquip ex ea
+    commodo consequat. Duis 0x865EC7 irure dolor in reprehenderit in voluptate
+    velit esse cillum dolore eu fugiat nulla 0b10011. Excepteur sint occaecat
     cupidatat non 0o41457307, sunt in culpa qui officia deserunt mollit anim
     id est laborum.
 
@@ -46,20 +46,20 @@ TEXT OBJECTS                                       *vim-numbers-text-objects*
 The plugin defines the following text objects. For more information on text
 objects in general, see |text-objects|.
 
-                                                        *vim-numbers-af* *v_af*
-af			"a number". Either an intergral or floating-point
-                        number.
-
-                                                        *vim-numbers-if* *v_if*
-if			"inner number". Has the same effect as the 'af' text
-                        object (see |vim-numbers-af|).
-
                                                         *vim-numbers-an* *v_an*
-an			"a bi[n]ary number".
+an			"a [n]umber". Either an integral or floating-point
+                        number with or without scientific notation.
 
                                                         *vim-numbers-in* *v_in*
-in			"inner bi[n]ary number". Has the same effect as the
-                        'an' text object (see |vim-numbers-an|).
+in			"inner [n]umber". Has the same effect as the 'an' text
+                        object (see |vim-numbers-an|).
+
+                                                        *vim-numbers-ai* *v_ai*
+ai			"a b[i]nary number".
+
+                                                        *vim-numbers-ii* *v_ii*
+ii			"inner b[i]nary number". Has the same effect as the
+                        'ai' text object (see |vim-numbers-ai|).
 
                                                         *vim-numbers-ax* *v_ax*
 ax			"a he[x]adecimal number".
