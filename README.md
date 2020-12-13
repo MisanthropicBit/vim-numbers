@@ -16,6 +16,8 @@
 A small plugin that provides text objects for integral or floating-point numbers
 (with or without scientific notation) and binary, hexadecimal and octal numbers.
 
+![vim-numbers demo](vim-numbers-demo.gif)
+
 ## Installation
 
 * [Pathogen](https://github.com/tpope/vim-pathogen):
