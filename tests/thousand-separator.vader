@@ -1,0 +1,59 @@
+Include: setup.vader
+
+Before:
+  let g:numbers_test_textobj = 'f'
+
+After:
+  unlet g:numbers_test_textobj
+
+Given (valid numbers with thousand separators):
+     -2.685,45 USD    
+    1.268.594,45 GBP    
+    2,685.45 SEK    
+      +1,268,594.45 IDR    
+       +2,119,895 AUD
+       +2.119.895 AUD
+
+Execute (only the numbers were selected):
+  let expected = [
+    \[4, 12],
+    \[3, 14],
+    \[3, 10],
+    \[5, 17],
+    \[6, 15],
+    \[6, 15],
+  \]
+
+  call DoAllSelections(g:numbers_test_textobj, expected)
+
+Given (numbers with thousand separators in different contexts):
+  !-2.685,45\
+  !1.268.594,45f
+  !2,685.45\\
+  !+1,268,594.45$
+
+Execute (nothing was selected except the valid suffix in line 3):
+  let expected = [
+    \[2, 10],
+    \[2, 13],
+    \[2, 9],
+    \[2, 14],
+  \]
+
+  call DoAllSelections(g:numbers_test_textobj, expected)
+
+Given (invalid numbers with thousand separators):
+     -26.85,45   
+    1.2685.94,45   
+    26,85:45   
+      +1,268,594.  
+
+Execute (nothing was selected except the valid suffix in line 3):
+  let expected = [
+    \[0, 0],
+    \[0, 0],
+    \[9, 10],
+    \[0, 0],
+  \]
+
+  call DoAllSelections(g:numbers_test_textobj, expected)
