@@ -14,7 +14,8 @@
 </div>
 
 A small plugin that provides text objects for integral or floating-point numbers
-(with or without scientific notation) and binary, hexadecimal and octal numbers.
+(optionally with scientific notation or thousand separators) and binary,
+hexadecimal and octal numbers.
 
 ![vim-numbers demo](vim-numbers-demo.gif)
 

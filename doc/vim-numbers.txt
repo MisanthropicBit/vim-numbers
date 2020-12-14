@@ -13,7 +13,8 @@ selecting numbers in decimal, binary, hexadecimal and octal formats.
 
 number format   valid prefixes      features~
 decimal         -                   integral or floating-point, optional
-                                    scientific notation and signs
+                                    scientific notation, signs and thousand
+                                    separators
 binary          0b, 0B              -
 hexadecimal     0x, 0X, #           -
 octal           0, 0o               -
@@ -25,15 +26,20 @@ Navigate to the two floating-point numbers in the following paragraph and type
 'van' or 'vin' to visually select them. Then navigate to the hexadecimal number
 on line 3 and select it with 'vax' or 'vix'. Do the same with the next
 hexadecimal number on line 4. Use 'vai' or 'vii' to select the binary number
-and 'vao' or 'vio' to select the octal number.
+and 'vao' or 'vio' to select the octal number. Finally, navigate to the last
+number with a positive sign and thousand separators and type 'van' or 'vin'.
 
     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
     tempor incididunt ut labore et 123.45 magna -3.1416e+88 aliqua. Ut enim ad
     minim veniam, quis nostrud #865ec7 ullamco laboris nisi ut aliquip ex ea
     commodo consequat. Duis 0x865EC7 irure dolor in reprehenderit in voluptate
     velit esse cillum dolore eu fugiat nulla 0b10011. Excepteur sint occaecat
-    cupidatat non 0o41457307, sunt in culpa qui officia deserunt mollit anim
-    id est laborum.
+    cupidatat non 0o41457307, sunt in culpa qui officia +1,268,594.45 deserunt
+    mollit anim id est laborum.
+
+Numbers with either '.' or ',' thousand separators are recognised so both
++2,119,895.45 and +2.119.895,45 are valid but not +2,119,895,45 or
++2.119.895.45.
 
 ==============================================================================
 REQUIREMENTS                                       *vim-numbers-requirements*
@@ -48,7 +54,8 @@ objects in general, see |text-objects|.
 
                                                         *vim-numbers-an* *v_an*
 an			"a [n]umber". Either an integral or floating-point
-                        number with or without scientific notation.
+                        number optionally with scientific notation, signs
+                        (-/+) or thousand separators.
 
                                                         *vim-numbers-in* *v_in*
 in			"inner [n]umber". Has the same effect as the 'an' text
