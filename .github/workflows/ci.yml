@@ -13,15 +13,21 @@ jobs:
     strategy:
       matrix:
         vim_type: ['vim', 'neovim']
+        version: ['head', 'stable']
         os: ['ubuntu-latest', 'windows-latest']
-        vim_version:
-          #- 'v8.2.1000'
-          #- 'v8.2.0000'
-          #- 'v8.1.0000'
-          - 'v8.0.0000'
-          - 'v7.4'
-          - 'v7.0'
-          - 'v0.4.4'
+        include:
+          - vim_type: 'vim'
+            version: 'stable'
+            vim_version: 'v8.0.0000'
+          - vim_type: 'vim'
+            version: 'stable'
+            vim_version: 'v7.4'
+          - vim_type: 'vim'
+            version: 'stable'
+            vim_version: 'v7.0'
+          - vim_type: 'neovim'
+            version: 'stable'
+            vim_version: 'v0.4.4'
     runs-on: '${{ matrix.os }}'
     steps:
       - uses: 'actions/checkout@v2'
