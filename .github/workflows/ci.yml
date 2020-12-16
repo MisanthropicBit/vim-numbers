@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         vim_type: ['vim', 'neovim']
-        version: ['head', 'stable']
+        vim_version: ['head', 'stable']
         os: ['ubuntu-latest', 'windows-latest']
         #include:
         #  - vim_type: 'vim'
