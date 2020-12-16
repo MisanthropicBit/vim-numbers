@@ -13,9 +13,15 @@
   </p>
 </div>
 
-A small plugin that provides text objects for integral or floating-point numbers
-(optionally with scientific notation or thousand separators) and binary,
-hexadecimal and octal numbers.
+A small plugin that provides text objects for numbers.
+
+* Typing `van` or `vin` selects an integral or floating-point number (optionally
+  with scientific notation and/or thousand separators).
+* Typing `vai` or `vii` selects a binary number (prefixed by `0b` or `0B`).
+* Typing `vax` or `vix` selects a hexadecimal number (prefixed by `0x`, `0X`, or `#`).
+* Typing `vao` or `vio` selects an octal number (prefixed by `0` or `0o`).
+
+There is no difference in selecting "a number" or "inner number".
 
 ![vim-numbers demo](vim-numbers-demo.gif)
 
