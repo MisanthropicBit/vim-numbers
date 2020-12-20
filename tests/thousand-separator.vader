@@ -1,7 +1,7 @@
 Include: setup.vader
 
 Before:
-  let g:numbers_test_textobj = 'f'
+  let g:numbers_test_textobj = 'n'
 
 After:
   unlet g:numbers_test_textobj
