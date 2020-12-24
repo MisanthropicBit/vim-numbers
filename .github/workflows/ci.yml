@@ -6,27 +6,23 @@ on:
   pull_request:
     branches: [ $default-branch ]
 
-  workflow_dispatch:
-
 jobs:
   test:
     strategy:
       matrix:
-        vim_type: ['vim', 'neovim']
-        vim_version: ['head', 'stable']
-        os: ['ubuntu-latest', 'windows-latest']
-        include:
-          - vim_type: 'vim'
-            version: 'v8.0.0000'
-          #- vim_type: 'vim'
-          #  version: 'stable'
-          #  vim_version: 'v7.4'
-          #- vim_type: 'vim'
-          #  version: 'stable'
-          #  vim_version: 'v7.0'
-          - vim_type: 'neovim'
-            vim_version: 'stable'
-            version: 'v0.4.4'
+        vim_type: ['vim']
+        os: ['ubuntu-latest', 'windows-latest', 'macos-latest']
+        vim_version: ['head', 'v8.0.0000', 'v7.4', 'v7.0']
+        exclude:
+          # Build fails to find Quickdraw.h
+          - os: 'macos-latest'
+            vim_version: 'v7.0'
+          # uint32_t is not correctly defined via configure
+          - os: 'macos-latest'
+            vim_version: 'v7.4'
+          # Build causes a buffer overflow when running the test script
+          - os: 'ubuntu-latest'
+            vim_version: 'v7.0'
     runs-on: '${{ matrix.os }}'
     steps:
       - uses: 'actions/checkout@v2'
