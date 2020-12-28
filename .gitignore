@@ -1,2 +1,7 @@
 tags
 *.todo
+vader.log
+htmlcov/
+venv*/
+.coverage_covimerage
+.coveralls.yml

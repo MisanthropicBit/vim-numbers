@@ -2,9 +2,12 @@
   <h1>vim-numbers</h1>
   <p>Text objects for numbers</p>
   <p>
-    <img src="https://img.shields.io/badge/version-0.1.0-success" />
+    <img src="https://img.shields.io/badge/version-0.1.0-blue" />
     <a href="https://github.com/MisanthropicBit/vim-numbers/actions?query=workflow%3A%22Run+vader+tests%22">
         <img src="https://img.shields.io/github/workflow/status/MisanthropicBit/vim-numbers/Run%20vader%20tests/master" />
+    </a>
+    <a href="https://coveralls.io/github/MisanthropicBit/vim-numbers?branch=master">
+        <img src="https://coveralls.io/repos/github/MisanthropicBit/vim-numbers/badge.svg?branch=master" alt="Coverage Status" />
     </a>
     <a href="/LICENSE">
         <img src="https://img.shields.io/github/license/MisanthropicBit/vim-numbers" />
