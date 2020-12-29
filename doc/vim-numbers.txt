@@ -35,7 +35,7 @@ number with a positive sign and thousand separators and type 'van' or 'vin'.
     commodo consequat. Duis 0x865EC7 irure dolor in reprehenderit in voluptate
     velit esse cillum dolore eu fugiat nulla 0b10011. Excepteur sint occaecat
     cupidatat non 0o41457307, sunt in culpa qui officia +1,268,594.45 deserunt
-    mollit anim id est laborum.
+    mollit anim id -1.268.594,45 est laborum.
 
 Numbers with either '.' or ',' thousand separators are recognised so both
 +2,119,895.45 and +2.119.895,45 are valid but not +2,119,895,45 or
