@@ -12,12 +12,6 @@ if [ "$TESTVIM" = "vim" ]; then
   TESTVIM_OPTS=-N
 fi
 
-TESTCMD=
-
-if [ "$TEST_OS" != "windows-latest" ]; then
-    TESTCMD="covimerage run --source plugin"
-fi
-
 $TESTCMD $TESTVIM $TESTVIM_OPTS -u ./tests/test_vimrc -c 'Vader! ./tests/*.vader'
 
 if [ -f "$VADER_OUTPUT_FILE" ]; then

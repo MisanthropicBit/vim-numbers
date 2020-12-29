@@ -16,7 +16,13 @@ jobs:
         vim_type: ['vim']
         os: ['ubuntu-latest', 'windows-latest', 'macos-latest']
         vim_version: ['v8.0.0000', 'v7.4', 'v7.0']
-        python: [3.8]
+        coverage_cmd: ['']
+        include:
+          - vim_type: 'vim'
+            os: 'ubuntu-latest'
+            vim_version: 'v8.0.0000'
+            python: 3.8
+            coverage_cmd: covimerage run --source plugin
         exclude:
           # Build fails to find Quickdraw.h
           - os: 'macos-latest'
@@ -39,12 +45,12 @@ jobs:
       - name: 'Install vader.vim'
         run: git clone https://github.com/junegunn/vader.vim.git
       - name: 'Set up Python ${{ matrix.python }}'
-        if: matrix.os != 'windows-latest'
+        if: matrix.coverage_cmd != ''
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python }}
       - name: 'Install covimerage and coveralls'
-        if: matrix.os != 'windows-latest'
+        if: matrix.coverage_cmd != ''
         run: |
           pip install --upgrade pip
           pip install covimerage coveralls
@@ -54,29 +60,11 @@ jobs:
         env:
           VADER_OUTPUT_FILE: vader.log
           TESTVIM: ${{ steps.vim.outputs.executable }}
-          TEST_OS: ${{ matrix.os }}
+          TESTCMD: ${{ matrix.coverage_cmd }}
         shell: bash
         run: ./tests/run_tests.sh
-      - name: 'Coveralls parallel'
-        if: matrix.os != 'windows-latest'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          COVERALLS_FLAG_NAME: run-${{ matrix.os }}-${{ matrix.vim_type }}-${{ matrix.vim_version }}
-          COVERALLS_PARALLEL: true
-        run: coveralls
-
-  finish:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - name: 'Set up Python ${{ matrix.python }}'
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.8
       - name: 'Submit results to coveralls'
+        if: matrix.coverage_cmd != ''
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          pip install --upgrade pip
-          pip install coveralls
-          coveralls --finish
+        run: coveralls
