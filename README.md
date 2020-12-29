@@ -2,7 +2,7 @@
   <h1>vim-numbers</h1>
   <p>Text objects for numbers</p>
   <p>
-    <img src="https://img.shields.io/badge/version-0.1.0-blue" />
+    <img src="https://img.shields.io/badge/version-1.0.0-blue" />
     <a href="https://github.com/MisanthropicBit/vim-numbers/actions?query=workflow%3A%22Run+vader+tests%22">
         <img src="https://img.shields.io/github/workflow/status/MisanthropicBit/vim-numbers/Run%20vader%20tests/master" />
     </a>
