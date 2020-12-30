@@ -5,3 +5,5 @@ htmlcov/
 venv*/
 .coverage_covimerage
 .coveralls.yml
+vim-numbers-*.zip
+package.fish
