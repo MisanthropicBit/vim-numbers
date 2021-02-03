@@ -1,4 +1,4 @@
-*vim-numbers.txt* Text objects for numbers
+*vim-numbers.txt* Text objects for numbers                *vim-numbers* *numbers*
 
                █ █ █ █▀▄▀█ ▄▄ █▄ █ █ █ █▀▄▀█ █▄▄ █▀▀ █▀█ █▀
                ▀▄▀ █ █ ▀ █    █ ▀█ █▄█ █ ▀ █ █▄█ ██▄ █▀▄ ▄█
@@ -133,7 +133,6 @@ Alexander Asp Bock (https://github.com/MisanthropicBit/vim-numbers).
 
 ==============================================================================
 LICENSE                                                 *vim-numbers-license*
-
 
 BSD 3-Clause License. Copyright © 2020 Alexander Asp Bock
 
