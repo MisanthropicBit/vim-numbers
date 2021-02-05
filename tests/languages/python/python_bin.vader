@@ -1,0 +1,39 @@
+Include: ../../setup.vader
+
+Before:
+  let g:numbers_test_textobj = 'i'
+
+After:
+  unlet g:numbers_test_textobj
+
+Given python (valid python binary numbers):
+     0b011101  
+    0B11011   
+     0b_011_1_01  
+    0B11_01_1   
+
+Execute (only the binary numbers were selected):
+  let expected = [
+    \[4, 11],
+    \[3, 9],
+    \[4, 14],
+    \[3, 11],
+  \]
+
+  call DoAllSelections(g:numbers_test_textobj, expected)
+
+Given python (invalid python binary numbers):
+     0h011101  
+    _0B11_11   
+     0_b_011_1_01  
+    0B11_01_1_   
+
+Execute (nothing is selected expect the valid prefix in the second line):
+  let expected = [
+    \[0, 0],
+    \[3, 6],
+    \[0, 0],
+    \[0, 0],
+  \]
+
+  call DoAllSelections(g:numbers_test_textobj, expected)
