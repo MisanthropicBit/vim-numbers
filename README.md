@@ -28,6 +28,9 @@ There is no difference in selecting "a number" or "inner number".
 
 ![vim-numbers demo](vim-numbers-demo.gif)
 
+(*Demo uses [keycastr](https://github.com/keycastr/keycastr) and Mac's
+[Cmd+Shift+5](https://support.apple.com/en-us/HT208721)*)
+
 ## Installation
 
 * [Pathogen](https://github.com/tpope/vim-pathogen):
