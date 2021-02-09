@@ -19,7 +19,7 @@ endfunction
 
 let s:binary_valid_tokens = 'bB0-1'
 let s:hex_valid_tokens = 'xX#0-9a-fA-F'
-let s:octal_valid_tokens = 'o0-7'
+let s:octal_valid_tokens = 'oO0-7'
 
 " Useful patterns
 let s:leading_zeroes_pattern = '^[\-+]\?0\{2,}[0-9]\+'
@@ -40,10 +40,10 @@ let s:hex_valid_token = '[' . s:hex_valid_tokens . ']'
 let s:hex_end_pattern = '[^' . s:hex_valid_tokens . ']'
 let s:hex_valid_pattern = '^\(' . s:hex_start_pattern . '\)[0-9a-fA-F]\+$'
 
-let s:octal_start_pattern = '[^0o0-7]'
+let s:octal_start_pattern = '[^0oO1-7]'
 let s:octal_valid_token = '[' . s:octal_valid_tokens . ']'
 let s:octal_end_pattern = '[^' . s:octal_valid_tokens . ']'
-let s:octal_valid_pattern = '^0o\?[0-7]\+$'
+let s:octal_valid_pattern = '^0[oO]\?[0-7]\+$'
 
 " Configuration variables
 let g:numbers#include_leading_zeroes = get(g:, 'numbers#include_leading_zeroes', 1)

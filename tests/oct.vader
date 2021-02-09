@@ -9,11 +9,13 @@ After:
 Given (valid octal numbers):
      02322
     0o2322   
+    0O2322   
       041407357  
 
 Execute (only the octal numbers were selected):
   let expected = [
     \[4, 8],
+    \[3, 8],
     \[3, 8],
     \[5, 13],
   \]
@@ -23,12 +25,16 @@ Execute (only the octal numbers were selected):
 Given (valid octal numbers in sentences):
   This is a octal number 02322 in a sentence
   This is a octal number 0o2322 in a sentence
+  This is a octal number 0O2322 in a sentence
   !0o2322\\
+  !0O2322\\
 
 Execute (only the octal numbers were selected):
   let expected = [
     \[24, 28],
     \[24, 29],
+    \[24, 29],
+    \[2, 7],
     \[2, 7],
   \]
 
@@ -37,10 +43,12 @@ Execute (only the octal numbers were selected):
 Given (invalid octal numbers):
      O2322
     0o2_22   
+    0O2_22   
 
 Execute (nothing is selected expect the valid prefix in the last line):
   let expected = [
     \[0, 0],
+    \[3, 5],
     \[3, 5],
   \]
 
