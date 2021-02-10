@@ -1,3 +1,7 @@
+# 1.0.1
+
+* Select octal numbers prefixed with a zero and capital o: '0O'
+
 # 1.0.0
 
 * GitHub Actions test workflow with [code
