@@ -52,6 +52,7 @@ jobs:
       - name: 'Install covimerage and coveralls'
         if: matrix.coverage_cmd != ''
         run: |
+          pip install 'click<8.0.0'
           pip install --upgrade pip
           pip install covimerage coveralls
           covimerage --version
