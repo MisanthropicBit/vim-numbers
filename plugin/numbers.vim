@@ -40,7 +40,7 @@ let s:hex_valid_token = '[' . s:hex_valid_tokens . ']'
 let s:hex_end_pattern = '[^' . s:hex_valid_tokens . ']'
 let s:hex_valid_pattern = '^\(' . s:hex_start_pattern . '\)[0-9a-fA-F]\+$'
 
-let s:octal_start_pattern = '[^0oO1-7]'
+let s:octal_start_pattern = '0[oO]\?[0-7]'
 let s:octal_valid_token = '[' . s:octal_valid_tokens . ']'
 let s:octal_end_pattern = '[^' . s:octal_valid_tokens . ']'
 let s:octal_valid_pattern = '^0[oO]\?[0-7]\+$'
@@ -52,6 +52,33 @@ let g:numbers#enable_text_objects = get(g:, 'numbers#enable_text_objects', 1)
 " Find the start column of a pattern in a line
 function! s:FindPatternStartColumn(pattern, lnum) abort
     return searchpos(a:pattern, 'bcn', a:lnum)[1]
+endfunction
+
+" We need to take special care of octal numbers since octal numbers can
+" contain a valid '0' prefix so 041407357 would be selected as '07357' if the
+" cursor was anywhere on the last five characters of the octal number
+function! s:FindOctalStartColumn(pattern, lnum) abort
+    " Save the old cursor so we can restore it afterwards
+    let old_cursor = getpos('.')[1:2]
+
+    " Search backwards and move the cursor
+    let col = searchpos(a:pattern, 'bc', a:lnum)[1]
+    let start_col = col
+
+    while col != 0
+        " Continue searching backwards until we fail but do
+        " not accept matches at the current cursor position
+        " to avoid matching at the current position
+        let col = searchpos(a:pattern, 'b', a:lnum)[1]
+
+        if col != 0
+            let start_col = col
+        endif
+    endwhile
+
+    call cursor(old_cursor)
+
+    return start_col
 endfunction
 
 " Find the end column of a pattern in a line
@@ -68,7 +95,7 @@ function! s:FindPatternEndColumn(pattern, lnum) abort
 endfunction
 
 " Visually select and validate a pattern given by a start and end pattern
-function! s:VselectPattern(start_pattern, end_pattern, valid_pattern, valid_token_pattern, start_offset) abort
+function! s:VselectPattern(start_pattern, end_pattern, valid_pattern, valid_token_pattern) abort
     let [lnum, col] = getpos('.')[1:2]
     let line = getline(lnum)
 
@@ -76,13 +103,16 @@ function! s:VselectPattern(start_pattern, end_pattern, valid_pattern, valid_toke
         return
     endif
 
-    let start = s:FindPatternStartColumn(a:start_pattern, lnum)
+    if a:start_pattern ==# s:octal_start_pattern
+        let start = s:FindOctalStartColumn(a:start_pattern, lnum)
+    else
+        let start = s:FindPatternStartColumn(a:start_pattern, lnum)
+    endif
 
     if start == 0
         return
     endif
 
-    let start += a:start_offset
     let end = s:FindPatternEndColumn(a:end_pattern, lnum)
     let subline = line[start-1:end-1]
 
@@ -102,7 +132,6 @@ function! s:VselectBinaryNumber() abort
         \s:binary_end_pattern,
         \s:binary_valid_pattern,
         \s:binary_valid_token,
-        \0,
     \)
 endfunction
 
@@ -113,22 +142,16 @@ function! s:VselectHexNumber() abort
         \s:hex_end_pattern,
         \s:hex_valid_pattern,
         \s:hex_valid_token,
-        \0,
     \)
 endfunction
 
 " Visually select an octal number
 function! s:VselectOctalNumber() abort
-    " We use an offset of 1 to move the start position one character to the
-    " right because octal numbers can contain the '0' prefix so 041407357
-    " would be selected as '07357' if the cursor was anywhere on the last five
-    " characters of the octal number
     call s:VselectPattern(
         \s:octal_start_pattern,
         \s:octal_end_pattern,
         \s:octal_valid_pattern,
         \s:octal_valid_token,
-        \1,
     \)
 endfunction
 
