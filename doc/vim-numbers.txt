@@ -17,7 +17,7 @@ decimal         -                   integral or floating-point, optional
                                     separators
 binary          0b, 0B              -
 hexadecimal     0x, 0X, #           -
-octal           0, 0o               -
+octal           0, 0o, 0O           -
 
 ==============================================================================
 USAGE                                                     *vim-numbers-usage*
