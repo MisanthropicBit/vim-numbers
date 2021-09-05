@@ -1,6 +1,8 @@
 <div align="center">
-  <h1>vim-numbers</h1>
-  <p>Text objects for numbers</p>
+  <img src="vim-numbers-logo.svg" />
+  <br />
+  <br />
+  <p><i>Text objects for numbers</i></p>
   <p>
     <img src="https://img.shields.io/badge/version-1.0.1-blue" />
     <a href="https://github.com/MisanthropicBit/vim-numbers/actions?query=workflow%3A%22Run+vader+tests%22">
