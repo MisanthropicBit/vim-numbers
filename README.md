@@ -1,7 +1,5 @@
 <div align="center">
-  <img src="vim-numbers-logo.svg" />
-  <br />
-  <br />
+  <img width="80%" src="vim-numbers-logo.svg" />
   <p><i>Text objects for numbers</i></p>
   <p>
     <img src="https://img.shields.io/badge/version-1.0.1-blue" />
@@ -16,6 +14,7 @@
     </a>
     <img src="https://img.shields.io/badge/compatible-neovim-blueviolet" />
   </p>
+  <br />
 </div>
 
 A small plugin that provides text objects for numbers.
