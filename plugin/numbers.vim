@@ -4,7 +4,7 @@ endif
 
 let s:cpo_save = &cpo
 
-let s:vim_numbers_version = '1.0.1'
+let s:vim_numbers_version = '1.0.2'
 
 " Return the current version
 function! VimNumbersVersion() abort
