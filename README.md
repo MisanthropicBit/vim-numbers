@@ -1,4 +1,5 @@
 <div align="center">
+  <br />
   <img width="80%" src="vim-numbers-logo.svg" />
   <p><i>Text objects for numbers</i></p>
   <p>
