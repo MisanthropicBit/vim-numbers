@@ -11,6 +11,7 @@ Given (floating-point examples from ':help floating-point-format'):
       1.234e03  
     1.0E-6  
     -3.1416e+88  
+  -3.1416e+88  
       0.239823  
     1243  
       1243e-03  
@@ -18,17 +19,18 @@ Given (floating-point examples from ':help floating-point-format'):
 
 Execute (only the numbers were selected):
   let expected = [
-    \[3, 9],
-    \[5, 11],
-    \[3, 6],
-    \[3, 8],
-    \[5, 12],
-    \[3, 8],
-    \[3, 13],
-    \[5, 12],
-    \[3, 6],
-    \[5, 12],
-    \[4, 15],
+    \[[3, 9]],
+    \[[5, 11]],
+    \[[3, 6]],
+    \[[3, 8]],
+    \[[5, 12]],
+    \[[3, 8]],
+    \[[3, 13]],
+    \[[1, 11]],
+    \[[5, 12]],
+    \[[3, 6]],
+    \[[5, 12]],
+    \[[4, 15]],
   \]
 
   call DoAllSelections(g:numbers_test_textobj, expected)
@@ -37,12 +39,36 @@ Given (numbers in different contexts):
   !123.456\
   #123.456f
   $123.456\%
+  func(-3.1416e+88)
+  func(-3.1416e+88, 'abc')
+  func('abc', -3.1416e+88)
+  "13.37"
+  1+3.1416e+88
+  1-3.1416e-88
+  3.1416e+88+1
+  3.1416e+88-1
+  1 +3.1416e+88
+  1 -3.1416e+88
+  1 + 3.1416e+88
+  1 - 3.1416e-88
 
 Execute (only the numbers were selected):
   let expected = [
-    \[2, 8],
-    \[2, 8],
-    \[2, 8],
+    \[[2, 8]],
+    \[[2, 8]],
+    \[[2, 8]],
+    \[[6, 16]],
+    \[[6, 16]],
+    \[[13, 23]],
+    \[[2, 6]],
+    \[[1, 1], [3, 12]],
+    \[[1, 1], [3, 12]],
+    \[[1, 10], [12, 12]],
+    \[[1, 10], [12, 12]],
+    \[[1, 1], [3, 13]],
+    \[[1, 1], [3, 13]],
+    \[[1, 1], [5, 14]],
+    \[[1, 1], [5, 14]],
   \]
 
   call DoAllSelections(g:numbers_test_textobj, expected)
@@ -53,19 +79,20 @@ Before:
 
 After:
   unlet g:numbers_test_textobj
+  unlet g:numbers#include_leading_zeroes
 
 Given (invalid numbers):
-  923..98239..
+  abc
   .923498
   000.23943
   123.456e
 
 Execute (nothing was selected):
   let expected = [
-    \[0, 0],
-    \[0, 0],
-    \[0, 0],
-    \[0, 0],
+    \[[0, 0]],
+    \[[0, 0]],
+    \[[0, 0]],
+    \[[0, 0]],
   \]
 
   call DoAllSelections(g:numbers_test_textobj, expected)

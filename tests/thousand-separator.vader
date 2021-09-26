@@ -16,12 +16,12 @@ Given (valid numbers with thousand separators):
 
 Execute (only the numbers were selected):
   let expected = [
-    \[4, 12],
-    \[3, 14],
-    \[3, 10],
-    \[5, 17],
-    \[6, 15],
-    \[6, 15],
+    \[[4, 12]],
+    \[[3, 14]],
+    \[[3, 10]],
+    \[[5, 17]],
+    \[[6, 15]],
+    \[[6, 15]],
   \]
 
   call DoAllSelections(g:numbers_test_textobj, expected)
@@ -34,10 +34,10 @@ Given (numbers with thousand separators in different contexts):
 
 Execute (nothing was selected except the valid suffix in line 3):
   let expected = [
-    \[2, 10],
-    \[2, 13],
-    \[2, 9],
-    \[2, 14],
+    \[[2, 10]],
+    \[[2, 13]],
+    \[[2, 9]],
+    \[[2, 14]],
   \]
 
   call DoAllSelections(g:numbers_test_textobj, expected)
@@ -50,10 +50,10 @@ Given (invalid numbers with thousand separators):
 
 Execute (nothing was selected except the valid suffix in line 3):
   let expected = [
-    \[0, 0],
-    \[0, 0],
-    \[9, 10],
-    \[0, 0],
+    \[[0, 0]],
+    \[[0, 0]],
+    \[[9, 10]],
+    \[[0, 0]],
   \]
 
   call DoAllSelections(g:numbers_test_textobj, expected)

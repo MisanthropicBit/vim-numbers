@@ -49,6 +49,130 @@ let s:octal_valid_pattern = '^0[oO]\?[0-7]\+$'
 let g:numbers#include_leading_zeroes = get(g:, 'numbers#include_leading_zeroes', 1)
 let g:numbers#enable_text_objects = get(g:, 'numbers#enable_text_objects', 1)
 
+function! FindNumberStart2(valid_tokens, line) abort
+    let col = col('.') - 1
+    let chr = a:line[col]
+
+    echom stridx(a:valid_tokens, a:line[col])
+    echom match(a:line[col], '[0-9]')
+
+    if chr !~# a:valid_tokens && chr !~# '[0-9]'
+        return -1
+    elseif chr =~# '[+-]' && a:line[col-1] =~# '[0-9]'
+        return -1
+    endif
+
+    while col >= 0
+        echom a:line[col] a:line[col - 1] match(chr, '[0-9]') stridx(a:valid_tokens, chr)
+
+        if chr !~# '[0-9]'
+            if chr =~# a:valid_tokens
+                let prev = a:line[col-1]
+
+                " If the character is a + or -, check that the previous
+                " character is a number or an 'e' for the exponent
+                if chr =~# '[+-]'
+                    if prev !~# '[eE]'
+                        if prev !~# '[0-9]'
+                            break
+                        else
+                            " Previous character is not a number, assume that
+                            " the addition or subtraction is part of a
+                            " calculation, e.g. '1+2', and move to last valid
+                            " character instead
+                            let col += 1
+                            break
+                        endif
+                    endif
+                endif
+            else
+                let col += 1
+                break
+            endif
+        endif
+
+        let col -= 1
+        let chr = a:line[col]
+    endwhile
+
+    return col == -1 ? 0 : col
+endfunction
+
+function! FindNumberEnd2(valid_tokens, line) abort
+    let col = col('.') - 1
+    echom col
+
+    " Handle the case where the cursor is situated on a sign
+    if a:line[col] =~# '[-+]' && a:line[col+1] !~# '[0-9]'
+        return col
+    else
+        let col += 1
+    endif
+
+    while col < col('$')
+        let chr = a:line[col]
+        echom a:line[col] a:line[col + 1]
+
+        if chr !~# '[0-9]'
+            if chr =~# a:valid_tokens
+                let next = a:line[col + 1]
+
+                if chr =~# '[eE]'
+                    " The exponent must be followed by a sign or a number
+                    if next !~# '[+\-0-9]'
+                        break
+                    endif
+                elseif chr =~# '[+-]'
+                    if a:line[col-1] !~# '[eE]' || next !~# '[0-9]'
+                        let col -= 1
+                        break
+                    endif
+                elseif next !~# '[0-9]'
+                    " A valid token must be followed by a number
+                    let col -= 1
+                    break
+                endif
+            else
+                let col -= 1
+                break
+            endif
+        endif
+
+        let col += 1
+    endwhile
+
+    return col
+endfunction
+
+function! FindLastPatternMatch(pattern, token_pattern, lnum, dir) abort
+    " Save the old cursor so we can restore it afterwards
+    let old_cursor = getpos('.')[1:2]
+
+    let search_flags = a:dir == 1 ? '' : 'b'
+
+    " Search and move the cursor
+    let col = searchpos(a:pattern, search_flags . 'c', a:lnum)[1]
+    let end_col = a:dir == 1 ? col('$') - 1 : 1
+    let final_col = col
+
+    while col != end_col
+        " Continue searching until we fail but do not accept matches at the
+        " current cursor position to avoid matching at the current position
+        let col = searchpos(a:pattern, search_flags, a:lnum)[1]
+
+        if !match(getline(a:lnum)[col], a:token_pattern)
+            let final_col = col
+            break
+        endif
+
+        let final_col = col
+    endwhile
+
+    call cursor(old_cursor)
+
+    return final_col
+endfunction
+
 " Find the start column of a pattern in a line
 function! s:FindPatternStartColumn(pattern, lnum) abort
     return searchpos(a:pattern, 'bcn', a:lnum)[1]
@@ -155,6 +279,16 @@ function! s:VselectOctalNumber() abort
     \)
 endfunction
 
+function! s:LeadingZeroesAllowed(str) abort
+    " If leading zeroes are disabled, 0.239823 or -0.239823 is fine but
+    " 000.23943 is not
+    if a:str =~# s:leading_zeroes_pattern && !get(g:, 'numbers#include_leading_zeroes')
+        return 0
+    else
+        return 1
+    endif
+endfunction
+
 " Find the start of a number
 function! s:FindNumberStart(line, lnum) abort
     let start_col = searchpos(s:not_valid_number_tokens_pattern, 'bcn', a:lnum)[1]
@@ -211,22 +345,30 @@ function! s:VselectNumber() abort
         return
     endif
 
-    let start_col = s:FindNumberStart(line, lnum)
+    let start_col = FindNumberStart2('[,.+-eE]', line)
+    echom 'start_col' start_col
 
-    if start_col == 0
+    if start_col == -1
         return
     endif
 
-    let end_col = s:FindNumberEnd(lnum)
-    let subline = line[start_col-1:end_col-1]
+    let end_col = FindNumberEnd2('[,.+-eE]', line)
+    echom 'end_col' end_col
+    let subline = line[start_col:end_col]
+    echom 'subline' subline
+    echom 'valid' s:IsValidNumber(subline)
 
     if !s:IsValidNumber(subline)
         return
     endif
 
-    call cursor(lnum, start_col)
+    if !s:LeadingZeroesAllowed(subline)
+        return
+    endif
+
+    call cursor(lnum, start_col + 1)
     normal! v
-    call cursor(lnum, end_col)
+    call cursor(lnum, end_col + 1)
 endfunction
 
 " <Plug> mappings

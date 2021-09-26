@@ -6,21 +6,45 @@ Execute:
     let cmd_template = "normal %d|v%s%s\<esc>"
 
     for lnum in range(1, line('$'))
-      let [low, high] = a:expected[lnum-1]
+      let intervals = a:expected[lnum-1]
+
+      " Check that the list of intervals do not overlap
+      for i in range(0, len(intervals)-2)
+        if intervals[i][1] >= intervals[i+1][0]
+          Assert false, printf(
+            \'Intervals %d and %d overlap for line %d',
+            \+1,
+            \i+2,
+            \lnum
+          \)
+        endif
+      endfor
+
+      " Jump to the current test line
       execute printf("normal! %dG", lnum)
 
       for textobj in ['a', 'i']
         for col in range(1, col('$')-1)
           execute printf(cmd_template, col, textobj, a:type)
+          let result = [[lnum, col], [lnum, col]]
 
-          if col >= low && col <= high
-            let result = [[lnum, low], [lnum, high]]
-          else
-            let result = [[lnum, col], [lnum, col]]
-          endif
+          for [low, high] in intervals
+            if col >= low && col <= high
+              let result[0][1] = low
+              let result[1][1] = high
+              break
+            endif
+          endfor
 
-          AssertEqual getpos("'<")[1:2], result[0]
-          AssertEqual getpos("'>")[1:2], result[1]
+          let test_msg = printf(
+            \"test %d: '%s' failed at column %d",
+            \lnum,
+            \getline(lnum),
+            \col,
+          \)
+
+          AssertEqual getpos("'<")[1:2], result[0], test_msg
+          AssertEqual getpos("'>")[1:2], result[1], test_msg
         endfor
       endfor
     endfor
