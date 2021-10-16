@@ -12,7 +12,7 @@ Given (valid numbers with thousand separators):
     2,685.45 SEK    
       +1,268,594.45 IDR    
        +2,119,895 AUD
-       +2.119.895 AUD
+       -2.119.895 AUD
 
 Execute (only the numbers were selected):
   let expected = [
@@ -45,15 +45,15 @@ Execute (nothing was selected except the valid suffix in line 3):
 Given (invalid numbers with thousand separators):
      -26.85,45   
     1.2685.94,45   
-    26,85:45   
+    26:85
       +1,268,594.  
 
 Execute (nothing was selected except the valid suffix in line 3):
   let expected = [
     \[[0, 0]],
     \[[0, 0]],
-    \[[9, 10]],
-    \[[0, 0]],
+    \[[3, 4], [6, 7]],
+    \[[5, 14]],
   \]
 
   call DoAllSelections(g:numbers_test_textobj, expected)

@@ -3,7 +3,7 @@ Include: setup.vader
 Before:
   let g:numbers_test_textobj = 'n'
 
-Given (floating-point examples from ':help floating-point-format'):
+Given (different numbers):
     123.456  
       +0.0001  
     55.0  
@@ -16,6 +16,7 @@ Given (floating-point examples from ':help floating-point-format'):
     1243  
       1243e-03  
      -9.934e1.843
+  26,85
 
 Execute (only the numbers were selected):
   let expected = [
@@ -31,6 +32,7 @@ Execute (only the numbers were selected):
     \[[3, 6]],
     \[[5, 12]],
     \[[4, 15]],
+    \[[1, 5]],
   \]
 
   call DoAllSelections(g:numbers_test_textobj, expected)
@@ -90,7 +92,7 @@ Given (invalid numbers):
 Execute (nothing was selected):
   let expected = [
     \[[0, 0]],
-    \[[0, 0]],
+    \[[2, 7]],
     \[[0, 0]],
     \[[0, 0]],
   \]
