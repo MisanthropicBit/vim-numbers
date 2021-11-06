@@ -53,6 +53,8 @@ Given (numbers in different contexts):
   1 -3.1416e+88
   1 + 3.1416e+88
   1 - 3.1416e-88
+  [+1.382, 3.1416e-88, -88.38923]
+  {+1.382, 3.1416e-88, -88.38923}
 
 Execute (only the numbers were selected):
   let expected = [
@@ -71,6 +73,8 @@ Execute (only the numbers were selected):
     \[[1, 1], [3, 13]],
     \[[1, 1], [5, 14]],
     \[[1, 1], [5, 14]],
+    \[[2, 7], [10, 19], [22, 30]],
+    \[[2, 7], [10, 19], [22, 30]],
   \]
 
   call DoAllSelections(g:numbers_test_textobj, expected)
