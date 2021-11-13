@@ -153,35 +153,6 @@ function! FindNumberEnd(valid_tokens, line) abort
     return max([start_col, col])
 endfunction
 
-function! FindLastPatternMatch(pattern, token_pattern, lnum, dir) abort
-    " Save the old cursor so we can restore it afterwards
-    let old_cursor = getpos('.')[1:2]
-
-    let search_flags = a:dir == 1 ? '' : 'b'
-
-    " Search and move the cursor
-    let col = searchpos(a:pattern, search_flags . 'c', a:lnum)[1]
-    let end_col = a:dir == 1 ? col('$') - 1 : 1
-    let final_col = col
-
-    while col != end_col
-        " Continue searching until we fail but do not accept matches at the
-        " current cursor position to avoid matching at the current position
-        let col = searchpos(a:pattern, search_flags, a:lnum)[1]
-
-        if !match(getline(a:lnum)[col], a:token_pattern)
-            let final_col = col
-            break
-        endif
-
-        let final_col = col
-    endwhile
-
-    call cursor(old_cursor)
-
-    return final_col
-endfunction
-
 " Find the start column of a pattern in a line
 function! s:FindPatternStartColumn(pattern, lnum) abort
     return searchpos(a:pattern, 'bcn', a:lnum)[1]
