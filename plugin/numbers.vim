@@ -51,7 +51,7 @@ let g:numbers#include_leading_zeroes = get(g:, 'numbers#include_leading_zeroes',
 let g:numbers#enable_text_objects = get(g:, 'numbers#enable_text_objects', 1)
 
 " Find the start of a number
-function! FindNumberStart(valid_tokens, line) abort
+function! s:FindNumberStart(valid_tokens, line) abort
     let col = col('.') - 1
     let start_col = col
     let chr = a:line[col]
@@ -102,7 +102,7 @@ function! FindNumberStart(valid_tokens, line) abort
 endfunction
 
 " Find the end of a number
-function! FindNumberEnd(valid_tokens, line) abort
+function! s:FindNumberEnd(valid_tokens, line) abort
     let col = col('.') - 1
     let start_col = col
     let number_seen = 0
@@ -293,13 +293,13 @@ function! s:VselectNumber() abort
         return
     endif
 
-    let start_col = FindNumberStart('[+-,.eE]', line)
+    let start_col = s:FindNumberStart('[+-,.eE]', line)
 
     if start_col == -1
         return
     endif
 
-    let end_col = FindNumberEnd('[+-,.eE]', line)
+    let end_col = s:FindNumberEnd('[+-,.eE]', line)
     let subline = line[start_col:end_col]
 
     if !s:IsValidNumber(subline)
