@@ -24,6 +24,7 @@ let s:octal_valid_tokens = 'oO0-7'
 " Useful patterns
 let s:leading_zeroes_pattern = '^[\-+]\?0\{2,}[0-9]\+'
 let s:not_valid_number_tokens_pattern = '[^0-9.,\-+eE]'
+let s:number_tokens = '[+-,.eE]'
 let s:number_pattern_dot =   '\v^[-+]?[0-9]+(\.[0-9]+)?([eE][-+]?[0-9]+(\.[0-9]+)?)?$'
 let s:number_pattern_comma = '\v^[-+]?[0-9]+(,[0-9]+)?([eE][-+]?[0-9]+(\.[0-9]+)?)?$'
 let s:number_thousand_separator_base_pattern = '^[\-+]\?[0-9]\(\(%s[0-9]\{3}\)\+\)\(%s[0-9]\+\)\?$'
@@ -293,13 +294,13 @@ function! s:VselectNumber() abort
         return
     endif
 
-    let start_col = s:FindNumberStart('[+-,.eE]', line)
+    let start_col = s:FindNumberStart(s:number_tokens, line)
 
     if start_col == -1
         return
     endif
 
-    let end_col = s:FindNumberEnd('[+-,.eE]', line)
+    let end_col = s:FindNumberEnd(s:number_tokens, line)
     let subline = line[start_col:end_col]
 
     if !s:IsValidNumber(subline)
