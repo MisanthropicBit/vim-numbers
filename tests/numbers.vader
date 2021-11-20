@@ -99,12 +99,14 @@ Given (invalid numbers):
   abc
   .923498
   000.23943
-  123.456e
+  1e3.1416e-88e
+  1E3.1416e-88E
 
 Execute (nothing was selected):
   let expected = [
     \[[0, 0]],
     \[[2, 7]],
+    \[[0, 0]],
     \[[0, 0]],
     \[[0, 0]],
   \]
