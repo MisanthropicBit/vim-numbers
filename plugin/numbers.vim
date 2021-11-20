@@ -117,6 +117,7 @@ function! s:FindNumberEnd(valid_tokens, line) abort
             if chr =~# '[eE]'
                 " An exponent must be followed by a sign or a number
                 if next !~# '[+\-0-9]'
+                    let col -=1
                     break
                 endif
             elseif chr =~# '[+-]'
