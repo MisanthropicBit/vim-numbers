@@ -24,7 +24,9 @@ let s:octal_valid_tokens = 'oO0-7'
 " Useful patterns
 let s:leading_zeroes_pattern = '^[\-+]\?0\{2,}[0-9]\+'
 let s:not_valid_number_tokens_pattern = '[^0-9.,\-+eE]'
-let s:number_pattern = '^[\-+]\?[0-9]\+\(\.[0-9]\+\)\?\([eE][\-+]\?[0-9]\+\(\.[0-9]\+\)\?\)\?$'
+let s:number_tokens = '[+-,.eE]'
+let s:number_pattern_dot =   '\v^[-+]?[0-9]+(\.[0-9]+)?([eE][-+]?[0-9]+(\.[0-9]+)?)?$'
+let s:number_pattern_comma = '\v^[-+]?[0-9]+(,[0-9]+)?([eE][-+]?[0-9]+(\.[0-9]+)?)?$'
 let s:number_thousand_separator_base_pattern = '^[\-+]\?[0-9]\(\(%s[0-9]\{3}\)\+\)\(%s[0-9]\+\)\?$'
 
 call s:CreateThousandSeparatorPattern(s:number_thousand_separator_base_pattern, 'dot', '\.', ',')
@@ -48,6 +50,114 @@ let s:octal_valid_pattern = '^0[oO]\?[0-7]\+$'
 " Configuration variables
 let g:numbers#include_leading_zeroes = get(g:, 'numbers#include_leading_zeroes', 1)
 let g:numbers#enable_text_objects = get(g:, 'numbers#enable_text_objects', 1)
+
+" Find the start of a number
+function! s:FindNumberStart(valid_tokens, line) abort
+    let col = col('.') - 1
+    let start_col = col
+    let chr = a:line[col]
+
+    " Fail if the character is a sign token that is preceded by a number (e.g.
+    " '1+200')
+    if chr =~# '[+-]' && a:line[col-1] =~# '[0-9]'
+        return -1
+    endif
+
+    while col >= 0
+        if chr !~# '[0-9]'
+            let prev = a:line[col-1]
+
+            " If the character is a sign, check that the previous
+            " character is a number or an 'e' for the exponent
+            if chr =~# '[+-]'
+                if prev !~# '[eE]'
+                    if prev !~# '[0-9]'
+                        break
+                    else
+                        " Previous character is a number, assume that the
+                        " operation is part of a calculation, e.g. '1+2',
+                        " and move to last valid character instead
+                        let col += 1
+                        break
+                    endif
+                endif
+            elseif chr =~# a:valid_tokens
+                if prev !~# '[0-9]'
+                    " A valid token must be preceded by a number, go back to
+                    " the last valid character
+                    let col += 1
+                    break
+                endif
+            else
+                " Not a number or valid token, move to last valid character
+                let col += 1
+                break
+            endif
+        endif
+
+        let col -= 1
+        let chr = a:line[col]
+    endwhile
+
+    " We might move to a valid character on col where col > start_col so
+    " always return the start column in this case. Also clamp the column
+    " to zero if we go beyond column 0
+    return min([start_col, col == -1 ? 0 : col])
+endfunction
+
+" Find the end of a number
+function! s:FindNumberEnd(valid_tokens, line) abort
+    let col = col('.') - 1
+    let start_col = col
+
+    while col < col('$')
+        let chr = a:line[col]
+
+        if chr !~# '[0-9]'
+            let next = a:line[col + 1]
+
+            if chr =~# '[eE]'
+                " An exponent must be followed by a sign or a number, go back
+                " to the last valid character
+                if next !~# '[+\-0-9]'
+                    let col -=1
+                    break
+                endif
+            elseif chr =~# '[+-]'
+                if next !~# '[0-9]'
+                    let col -= 1
+                    break
+                else
+                    let prev = a:line[col-1]
+
+                    " If the next character is a number which is not preceded
+                    " by an exponent token and we have already seen a number,
+                    " bail out since it must be a calculation like '2+2'
+                    if prev !~# '[eE]' && prev =~# '[0-9]'
+                        let col -= 1
+                        break
+                    endif
+                endif
+            elseif chr =~# a:valid_tokens
+                if next !~# '[0-9]'
+                    " A valid token must be followed by a number, go back to
+                    " the last valid character
+                    let col -= 1
+                    break
+                endif
+            else
+                let col -= 1
+                break
+            endif
+        endif
+
+        let col += 1
+    endwhile
+
+    " We might move to a valid character on col where col < start_col so
+    " always return the start column in this case
+    return max([start_col, col])
+endfunction
 
 " Find the start column of a pattern in a line
 function! s:FindPatternStartColumn(pattern, lnum) abort
@@ -155,44 +265,22 @@ function! s:VselectOctalNumber() abort
     \)
 endfunction
 
-" Find the start of a number
-function! s:FindNumberStart(line, lnum) abort
-    let start_col = searchpos(s:not_valid_number_tokens_pattern, 'bcn', a:lnum)[1]
-
-    if start_col == 0
-        let start_col = 1
-    else
-        " We found a valid first character that is not part of a number,
-        " adjust column position to first character that is part of the number
-        let start_col += 1
-    endif
-
-    " If leading zeroes are disabled, 0.239823 or -0.239823 is fine but 000.23943 is not
-    if a:line[start_col-1:] =~# s:leading_zeroes_pattern && !g:numbers#include_leading_zeroes
+function! s:LeadingZeroesAllowed(str) abort
+    " If leading zeroes are disabled, 0.239823 or -0.239823 is fine but
+    " 000.23943 is not
+    if a:str =~# s:leading_zeroes_pattern && !get(g:, 'numbers#include_leading_zeroes')
         return 0
-    endif
-
-    return start_col
-endfunction
-
-" Find the end of a number
-function! s:FindNumberEnd(lnum) abort
-    let end_col = searchpos(s:not_valid_number_tokens_pattern, 'cn', a:lnum)[1]
-
-    if end_col == 0
-        let end_col = col('$') - 1
     else
-        let end_col -= 1
+        return 1
     endif
-
-    return end_col
 endfunction
 
 " Return 1 if a string is a valid number, 0 otherwise
 function! s:IsValidNumber(string) abort
     " Match the number pattern or either of the patterns with thousand
     " separators
-    if match(a:string, s:number_pattern) != -1
+    if match(a:string, s:number_pattern_dot) != -1
+        \|| match(a:string, s:number_pattern_comma) != -1
         \|| match(a:string, s:number_thousand_separator_dot_pattern) != -1
         \|| match(a:string, s:number_thousand_separator_comma_pattern) != -1
             " Do not consider valid octal numbers decimal numbers
@@ -211,22 +299,26 @@ function! s:VselectNumber() abort
         return
     endif
 
-    let start_col = s:FindNumberStart(line, lnum)
+    let start_col = s:FindNumberStart(s:number_tokens, line)
 
-    if start_col == 0
+    if start_col == -1
         return
     endif
 
-    let end_col = s:FindNumberEnd(lnum)
-    let subline = line[start_col-1:end_col-1]
+    let end_col = s:FindNumberEnd(s:number_tokens, line)
+    let subline = line[start_col:end_col]
 
     if !s:IsValidNumber(subline)
         return
     endif
 
-    call cursor(lnum, start_col)
+    if !s:LeadingZeroesAllowed(subline)
+        return
+    endif
+
+    call cursor(lnum, start_col + 1)
     normal! v
-    call cursor(lnum, end_col)
+    call cursor(lnum, end_col + 1)
 endfunction
 
 " <Plug> mappings

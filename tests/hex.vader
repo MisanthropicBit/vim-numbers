@@ -10,12 +10,14 @@ Given (valid hexadecimal numbers):
      0x8C966f  
     #abc48B   
        0XdaBf47   
+  func(0x293b8)
 
 Execute (only the hexadecimal numbers were selected):
   let expected = [
-    \[4, 11],
-    \[3, 9],
-    \[6, 13],
+    \[[4, 11]],
+    \[[3, 9]],
+    \[[6, 13]],
+    \[[6, 12]],
   \]
 
   call DoAllSelections(g:numbers_test_textobj, expected)
@@ -28,10 +30,10 @@ Given (valid hexadecimal numbers in sentences):
 
 Execute (only the hexadecimal numbers were selected):
   let expected = [
-    \[30, 37],
-    \[30, 36],
-    \[30, 37],
-    \[2, 9],
+    \[[30, 37]],
+    \[[30, 36]],
+    \[[30, 37]],
+    \[[2, 9]],
   \]
 
   call DoAllSelections(g:numbers_test_textobj, expected)
@@ -43,9 +45,9 @@ Given (invalid hexadecimal numbers):
 
 Execute (nothing is selected expect the valid prefix in the last line):
   let expected = [
-    \[0, 0],
-    \[0, 0],
-    \[6, 10],
+    \[[0, 0]],
+    \[[0, 0]],
+    \[[6, 10]],
   \]
 
   call DoAllSelections(g:numbers_test_textobj, expected)

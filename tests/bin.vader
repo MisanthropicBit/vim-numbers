@@ -12,8 +12,8 @@ Given (valid binary numbers):
 
 Execute (only the binary numbers were selected):
   let expected = [
-    \[4, 11],
-    \[3, 9],
+    \[[4, 11]],
+    \[[3, 9]],
   \]
 
   call DoAllSelections(g:numbers_test_textobj, expected)
@@ -25,9 +25,9 @@ Given (valid binary numbers in sentences):
 
 Execute (only the binary numbers were selected):
   let expected = [
-    \[25, 32],
-    \[25, 31],
-    \[2, 9],
+    \[[25, 32]],
+    \[[25, 31]],
+    \[[2, 9]],
   \]
 
   call DoAllSelections(g:numbers_test_textobj, expected)
@@ -38,8 +38,8 @@ Given (invalid binary numbers):
 
 Execute (nothing is selected expect the valid prefix in the last line):
   let expected = [
-    \[0, 0],
-    \[3, 6],
+    \[[0, 0]],
+    \[[3, 6]],
   \]
 
   call DoAllSelections(g:numbers_test_textobj, expected)
