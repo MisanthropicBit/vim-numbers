@@ -57,8 +57,8 @@ function! s:FindNumberStart(valid_tokens, line) abort
     let start_col = col
     let chr = a:line[col]
 
-    " Fail if the first character is not a valid token or a number,
-    " or it is a sign token and preceded by a number (e.g. '1+200')
+    " Fail if the character is a sign token that is preceded by a number (e.g.
+    " '1+200')
     if chr =~# '[+-]' && a:line[col-1] =~# '[0-9]'
         return -1
     endif
@@ -67,7 +67,7 @@ function! s:FindNumberStart(valid_tokens, line) abort
         if chr !~# '[0-9]'
             let prev = a:line[col-1]
 
-            " If the character is a + or -, check that the previous
+            " If the character is a sign, check that the previous
             " character is a number or an 'e' for the exponent
             if chr =~# '[+-]'
                 if prev !~# '[eE]'
@@ -99,6 +99,9 @@ function! s:FindNumberStart(valid_tokens, line) abort
         let chr = a:line[col]
     endwhile
 
+    " We might move to a valid character on col where col > start_col so
+    " always return the start column in this case. Also clamp the column
+    " to zero if we go beyond column 0
     return min([start_col, col == -1 ? 0 : col])
 endfunction
 
@@ -106,7 +109,6 @@ endfunction
 function! s:FindNumberEnd(valid_tokens, line) abort
     let col = col('.') - 1
     let start_col = col
-    let number_seen = 0
 
     while col < col('$')
         let chr = a:line[col]
@@ -115,7 +117,8 @@ function! s:FindNumberEnd(valid_tokens, line) abort
             let next = a:line[col + 1]
 
             if chr =~# '[eE]'
-                " An exponent must be followed by a sign or a number
+                " An exponent must be followed by a sign or a number, go back
+                " to the last valid character
                 if next !~# '[+\-0-9]'
                     let col -=1
                     break
@@ -125,14 +128,14 @@ function! s:FindNumberEnd(valid_tokens, line) abort
                     let col -= 1
                     break
                 else
+                    let prev = a:line[col-1]
+
                     " If the next character is a number which is not preceded
                     " by an exponent token and we have already seen a number,
-                    " bail out
-                    if a:line[col-1] !~# '[eE]'
-                        if number_seen
-                            let col -= 1
-                            break
-                        endif
+                    " bail out since it must be a calculation like '2+2'
+                    if prev !~# '[eE]' && prev =~# '[0-9]'
+                        let col -= 1
+                        break
                     endif
                 endif
             elseif chr =~# a:valid_tokens
@@ -149,9 +152,10 @@ function! s:FindNumberEnd(valid_tokens, line) abort
         endif
 
         let col += 1
-        let number_seen = 1
     endwhile
 
+    " We might move to a valid character on col where col < start_col so
+    " always return the start column in this case
     return max([start_col, col])
 endfunction
 
