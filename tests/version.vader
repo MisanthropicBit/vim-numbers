@@ -1,2 +1,2 @@
 Execute (check current version):
-  AssertEqual VimNumbersVersion(), '1.0.2'
+  AssertEqual VimNumbersVersion(), '1.0.3'

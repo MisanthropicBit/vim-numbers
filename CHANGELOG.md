@@ -1,3 +1,11 @@
+# 1.0.3
+
+* Fix number vselect contexts
+  - Recognise comma-separated numbers with scientific notation
+  - Add tests for context cases (e.g. lists and dictionaries)
+  - Add 2 new failing tests that fail due to ambiguity
+  - Add test for leading zeroes
+
 # 1.0.2
 
 * Fix a bug in selecting octal numbers at the beginning of lines. Also make
